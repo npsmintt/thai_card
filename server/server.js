@@ -235,15 +235,19 @@ app.post('/game', (req, res) => {
 app.get('/leaderboard/:wordSetId', (req, res) => {
   const word_set_id = req.params.wordSetId;
   db.query(
-    'SELECT @rank := @rank + 1 AS `rank`, img, u.username, l.finished_time \
-    FROM leaderboard l \
-    JOIN (SELECT @rank := 0) r \
-    JOIN user u ON l.user_id = u.id \
-    WHERE l.word_set_id = ? \
-    ORDER BY l.finished_time ASC',
+    `SELECT @rank := @rank + 1 AS 'rank', t.img, t.username, t.finished_time
+     FROM (
+       SELECT u.img, u.username, l.finished_time
+       FROM leaderboard l
+       JOIN user u ON l.user_id = u.id
+       WHERE l.word_set_id = ?
+       ORDER BY l.finished_time ASC
+     ) t
+     JOIN (SELECT @rank := 0) r`,
     [word_set_id],
     (error, results) => {
       if (error) {
+        console.log(results)
         console.error('Error fetching leaderboard:', error);
         res.status(500).json({ error: 'Internal server error' });
       } else {
