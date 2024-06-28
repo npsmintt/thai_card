@@ -89,6 +89,17 @@ export default function TopicSelect(props) {
       </View>
       <View className="flex-1 bg-[#CCE0FF] justify-center items-center pt-8">
         <Text className="mb-5 font-[dangrek] text-3xl pt-1 text-white text-center shadow-sm">Please select the topic</Text>
+        {/* <FlatList
+                data={categories}
+                keyExtractor={item => item.id.toString()}
+                renderItem={({ item }) => (
+                    <TouchableOpacity 
+                      onPress={() => navigation.navigate('SetSelect', { user_id: user_id, username: username, email: email, categoryId: item.id, categoryName: item.name, img:img, type:type })} 
+                      className="bg-white w-[80vw] h-32 mb-5 justify-center items-center shadow-sm rounded-xl">
+                        <Text className="font-[dangrek] text-4xl mt-4 p-10">{item.name}</Text>
+                    </TouchableOpacity>
+                )}
+        /> */}
         {categories.map(item => (
             <TouchableOpacity 
               key={item.id}
