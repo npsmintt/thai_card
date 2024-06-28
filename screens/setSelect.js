@@ -3,9 +3,7 @@ import {
   AppRegistry,
   SafeAreaView,
   TouchableOpacity,
-  FlatList,
-  Image,
-  StyleSheet,
+  ScrollView,
   Text,
   View,
 } from "react-native";
@@ -40,6 +38,7 @@ export default function SetSelect(props) {
   }
   return (
     <SafeAreaView className="flex-1 bg-[#397CE1]">
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View className="flex-row h-20 px-4 mb-5 items-center justify-center">
         <TouchableOpacity onPress={() => navigation.goBack()} className="ml-5 absolute left-0 bg-white rounded-full p-3 shadow">
           <ChevronLeftIcon size={23} stroke={50} color="#434343" />
@@ -48,42 +47,41 @@ export default function SetSelect(props) {
           {categoryName}
         </Text>
       </View>
-      <View className="flex-1 bg-[#CCE0FF] justify-center items-center pt-8">
+      <View className="flex-1 bg-[#CCE0FF] items-center pt-8">
         <Text className="mb-5 font-[dangrek] text-3xl text-white text-center shadow-sm pt-1">Please select the word set</Text>
-        <FlatList
-                data={wordSet}
-                keyExtractor={item => item.id.toString()}
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => {
-                    if (type === 'admin') {
-                      navigation.navigate('WordDict', {
-                        user_id: user_id,
-                        username: username,
-                        email: email,
-                        categoryName: categoryName,
-                        wordSetId: item.id,
-                        wordSetName: item.name,
-                        img: img
-                      });
-                    } else if (type === 'player') {
-                      navigation.navigate('Flashcard', {
-                        user_id: user_id,
-                        username: username,
-                        email: email,
-                        categoryName: categoryName,
-                        wordSetId: item.id,
-                        wordSetName: item.name,
-                        img: img
-                      });
-                    }
-                  }}
-                  className="bg-white w-[80vw] h-32 mb-5 justify-center items-center shadow-sm rounded-xl"
-                >
-                        <Text className="font-[dangrek] text-4xl mt-4 p-10">{item.name}</Text>
-                    </TouchableOpacity>
-                )}
-        />
+        {wordSet.map(item => (
+            <TouchableOpacity 
+              key={item.id}
+              onPress={() => {
+                if (type === 'admin') {
+                  navigation.navigate('WordDict', {
+                    user_id: user_id,
+                    username: username,
+                    email: email,
+                    categoryName: categoryName,
+                    wordSetId: item.id,
+                    wordSetName: item.name,
+                    img: img
+                  });
+                } else if (type === 'player') {
+                  navigation.navigate('Flashcard', {
+                    user_id: user_id,
+                    username: username,
+                    email: email,
+                    categoryName: categoryName,
+                    wordSetId: item.id,
+                    wordSetName: item.name,
+                    img: img
+                  });
+                }
+              }}
+              className="bg-white w-[80vw] h-32 mb-5 justify-center items-center shadow-sm rounded-xl"
+            >
+              <Text className="font-[dangrek] text-4xl mt-4 p-10">{item.name}</Text>
+            </TouchableOpacity>
+          ))}
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
