@@ -87,7 +87,7 @@ export default function TopicSelect(props) {
           <Cog6ToothIcon size="50" color="#fff"/>
         </TouchableOpacity>
       </View>
-      <View className="flex-1 bg-[#CCE0FF] justify-center items-center pt-8">
+      <View className="flex-1 bg-[#CCE0FF] items-center pt-8">
         <Text className="mb-5 font-[dangrek] text-3xl pt-1 text-white text-center shadow-sm">Please select the topic</Text>
         {categories.map(item => (
             <TouchableOpacity 

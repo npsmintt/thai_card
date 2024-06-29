@@ -61,7 +61,8 @@ export default function SetSelect(props) {
                     categoryName: categoryName,
                     wordSetId: item.id,
                     wordSetName: item.name,
-                    img: img
+                    img: img,
+                    type: type
                   });
                 } else if (type === 'player') {
                   navigation.navigate('Flashcard', {
