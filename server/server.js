@@ -257,6 +257,20 @@ app.get('/leaderboard/:wordSetId', (req, res) => {
   );
 });
 
+app.post('/wordDelete', (req, res) => {
+  const { id } = req.body;
+  const sql = 'DELETE FROM flashcards WHERE id = ?';
+
+  db.query(sql, [id], (err, result) => {
+      if (err) {
+          console.error('Error deleting word:', err);
+          res.status(500).send('Error deleting word');
+          return;
+      }
+      res.status(200).send('Word deleted successfully');
+  });
+});
+
 app.listen(3000, ()=> {
   console.log("listening at port 3000")
 });

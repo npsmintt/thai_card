@@ -36,9 +36,17 @@ export default function WordDict(props) {
     fetchFlashcards();
   }, [wordSetId]);
 
-  const handleDelete = () => {
-
-  };
+  const handleDelete = async (id) => {
+    try {
+        await axios.post('https://exciting-monster-living.ngrok-free.app/wordDelete', { id });
+        // Assuming successful deletion, update the state or refetch data
+        const updatedFlashcards = flashcards.filter(card => card.id !== id);
+        setFlashcards(updatedFlashcards);
+    } catch (error) {
+      console.error('Error deleting word:', error);
+      // Handle error state or alert user
+    }
+    };
 
   if (!fontsLoaded) {
     return <Text>Font Loading...</Text>;
@@ -74,7 +82,7 @@ export default function WordDict(props) {
                         onPress={() => navigation.navigate('FlashcardAdmin', { user_id: user_id, username: username, email: email, categoryName: categoryName, img: img, type: type, flashcardId: item.id })} 
                         className="bg-white w-[80vw] h-16 justify-center mb-5 shadow-sm rounded-xl">
                         <Text className="font-[dangrek] text-4xl pt-6 pl-6">{item.english_word}</Text>
-                        <TouchableOpacity onPress={handleDelete} className="absolute right-0 mr-6">
+                        <TouchableOpacity onPress={handleDelete(item.id)} className="absolute right-0 mr-6">
                             <XCircleIcon size={36} color={'red'}/>
                         </TouchableOpacity>
                     </TouchableOpacity>
