@@ -3,65 +3,85 @@ import {
   AppRegistry,
   SafeAreaView,
   TouchableOpacity,
-  FlatList,
-  Image,
-  StyleSheet,
+  ScrollView,
   Text,
   View,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";
 import axios from 'axios';
-import { ChevronLeftIcon } from 'react-native-heroicons/solid';
+import { XCircleIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
 import SearchInput, { createFilter } from 'react-native-search-filter';
 
 export default function WordDict(props) {
   const navigation = props.navigation;
-  const { user_id, username, email, categoryName, wordSetId, wordSetName, img } = props.route.params;
-  const [categories, setCategories] = useState([]);
+  const { user_id, username, email, categoryName, wordSetId, wordSetName, img, type } = props.route.params;
+  const [flashcards, setFlashcards] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredFlashcards = flashcards.filter(createFilter(searchTerm, 'english_word'));
   const [fontsLoaded] = useFonts({
     Dangrek_400Regular,
   });
+
+  useEffect(() => {
+    const fetchFlashcards = async () => {
+        try {
+            const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/flashcards/${wordSetId}`);
+            setFlashcards(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    fetchFlashcards();
+  }, [wordSetId]);
+
+  const handleDelete = () => {
+
+  };
 
   if (!fontsLoaded) {
     return <Text>Font Loading...</Text>;
   }
   return (
     <SafeAreaView className="flex-1 bg-[#397CE1]">
-        <View className="flex-row px-4 items-center justify-center">
-            <TouchableOpacity onPress={() => navigation.goBack()} 
-            className="ml-5 absolute left-0 bg-white rounded-full p-3 shadow">
-                <ChevronLeftIcon size={23} stroke={50} color="#434343" />
-            </TouchableOpacity>
-            <Text className="font-[dangrek] text-white pt-8 text-4xl">
-            {categoryName}
-            </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Leaderboard', { user_id, username, email, categoryName, wordSetId, wordSetName, img})} 
-            className="mr-5 absolute right-0 p-3">
-                <ChartBarIcon size={30} color="#ffffff"/>
-            </TouchableOpacity>
-        </View>
-        <View className="items-center justify-center px-4 mb-5 mt-[-2vw]">
-          <Text className="font-[dangrek] text-white text-lg">
-              {wordSetName}
-          </Text>
-        </View>
-      <View className="flex-1 bg-[#CCE0FF] justify-center items-center pt-8">
-        <SearchInput className="mb-5 font-[dangrek] text-3xl pt-1 text-white text-center shadow-sm"/>
-        <FlatList
-                data={categories}
-                keyExtractor={item => item.id.toString()}
-                renderItem={({ item }) => (
-                    <TouchableOpacity 
-                      onPress={() => navigation.navigate('SetSelect', { user_id: user_id, username: username, email: email, categoryId: item.id, categoryName: item.name, img:img, type:type })} 
-                      className="bg-white w-[80vw] h-32 mb-5 justify-center items-center shadow-sm rounded-xl">
-                        <Text className="font-[dangrek] text-4xl mt-4 p-10">{item.name}</Text>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <View className="flex-row px-4 items-center justify-center">
+                    <TouchableOpacity onPress={() => navigation.goBack()} 
+                    className="ml-5 absolute left-0 bg-white rounded-full p-3 shadow">
+                        <ChevronLeftIcon size={23} stroke={50} color="#434343" />
                     </TouchableOpacity>
-                )}
-        />
-      </View>
+                    <Text className="font-[dangrek] text-white pt-8 text-4xl">
+                    {categoryName}
+                    </Text>
+                </View>
+                <View className="items-center justify-center px-4 mb-5 mt-[-2vw]">
+                <Text className="font-[dangrek] text-white text-lg">
+                    {wordSetName}
+                </Text>
+                </View>
+            <View className="flex-1 bg-[#CCE0FF] items-center pt-8">
+                <SearchInput 
+                onChangeText={(term) => setSearchTerm(term)}
+                placeholder="Search card..."
+                style={{ width: '80%', height: 50, marginBottom: 20, paddingLeft: 10, borderRadius: '12px', fontFamily: 'Dangrek', fontSize: 20 }}
+                inputViewStyles={{ backgroundColor: 'white', width: '80%', height: 50, marginBottom: 20, paddingLeft: 20, borderRadius: '12px', fontFamily: 'Dangrek', fontSize: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.10, shadowRadius: 3.84, elevation: 5 }}
+                inputStyles={{ fontFamily: 'Dangrek', fontSize: 20 }}
+                />
+                {filteredFlashcards.map((item, index) => (
+                    <TouchableOpacity 
+                        key={index}
+                        onPress={() => navigation.navigate('FlashcardAdmin', { user_id: user_id, username: username, email: email, categoryName: categoryName, img: img, type: type, flashcardId: item.id })} 
+                        className="bg-white w-[80vw] h-16 justify-center mb-5 shadow-sm rounded-xl">
+                        <Text className="font-[dangrek] text-4xl pt-6 pl-6">{item.english_word}</Text>
+                        <TouchableOpacity onPress={handleDelete} className="absolute right-0 mr-6">
+                            <XCircleIcon size={36} color={'red'}/>
+                        </TouchableOpacity>
+                    </TouchableOpacity>
+                ))}
+                    
+            </View>
+        </ScrollView>
     </SafeAreaView>
   );
 }
