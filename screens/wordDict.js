@@ -10,7 +10,7 @@ import {
 import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";
 import axios from 'axios';
-import { XCircleIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
+import { XMarkIcon, PencilIcon, XCircleIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
 import SearchInput, { createFilter } from 'react-native-search-filter';
 
 export default function WordDict(props) {
@@ -18,6 +18,7 @@ export default function WordDict(props) {
   const { user_id, username, email, categoryName, wordSetId, wordSetName, img, type } = props.route.params;
   const [flashcards, setFlashcards] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [editMode, setEditMode] = useState(false);
   const filteredFlashcards = flashcards.filter(createFilter(searchTerm, 'english_word'));
   const [fontsLoaded] = useFonts({
     Dangrek_400Regular,
@@ -35,6 +36,10 @@ export default function WordDict(props) {
 
     fetchFlashcards();
   }, [wordSetId]);
+
+  const handleEdit = () => {
+    setEditMode(prevMode => !prevMode);
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -59,6 +64,17 @@ export default function WordDict(props) {
                     className="ml-5 absolute left-0 bg-white rounded-full p-3 shadow">
                         <ChevronLeftIcon size={23} stroke={50} color="#434343" />
                     </TouchableOpacity>
+                    {editMode ? (
+                      <TouchableOpacity onPress={handleEdit} 
+                      className="absolute right-0 mr-5 p-3">
+                        <XMarkIcon size={35} color="#fff" />
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity onPress={handleEdit} 
+                      className="absolute right-0 mr-5 p-3">
+                        <PencilIcon size={25} color="#fff" />
+                      </TouchableOpacity>
+                    )}
                     <Text className="font-[dangrek] text-white pt-8 text-4xl">
                     {categoryName}
                     </Text>
@@ -72,6 +88,7 @@ export default function WordDict(props) {
                 <SearchInput 
                 onChangeText={(term) => setSearchTerm(term)}
                 placeholder="Search card..."
+                autoCapitalize="none"
                 style={{ width: '80%', height: 50, marginBottom: 20, paddingLeft: 10, borderRadius: '12px', fontFamily: 'Dangrek', fontSize: 20 }}
                 inputViewStyles={{ backgroundColor: 'white', width: '80%', height: 50, marginBottom: 20, paddingLeft: 20, borderRadius: '12px', fontFamily: 'Dangrek', fontSize: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.10, shadowRadius: 3.84, elevation: 5 }}
                 inputStyles={{ fontFamily: 'Dangrek', fontSize: 20 }}
@@ -82,9 +99,11 @@ export default function WordDict(props) {
                         onPress={() => navigation.navigate('FlashcardAdmin', { user_id: user_id, username: username, email: email, categoryName: categoryName, img: img, type: type, flashcardId: item.id })} 
                         className="bg-white w-[80vw] h-16 justify-center mb-5 shadow-sm rounded-xl">
                         <Text className="font-[dangrek] text-4xl pt-6 pl-6">{item.english_word}</Text>
-                        <TouchableOpacity onPress={handleDelete(item.id)} className="absolute right-0 mr-6">
-                            <XCircleIcon size={36} color={'red'}/>
-                        </TouchableOpacity>
+                        {editMode && (
+                            <TouchableOpacity onPress={() => handleDelete(item.id)} className="absolute right-0 mr-6">
+                                <XCircleIcon size={36} color={'red'}/>
+                            </TouchableOpacity>
+                        )}
                     </TouchableOpacity>
                 ))}
                     
