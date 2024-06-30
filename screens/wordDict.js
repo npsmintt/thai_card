@@ -103,7 +103,14 @@ export default function WordDict(props) {
                 {filteredFlashcards.map((item, index) => (
                     <TouchableOpacity 
                         key={index}
-                        onPress={() => navigation.navigate('FlashcardAdmin', { categoryName: categoryName, wordSetName: wordSetName, flashcardId: item.id })} 
+                        onPress={() => {
+                          if (!editMode) {
+                            navigation.navigate('FlashcardAdmin', 
+                              { categoryName: categoryName, 
+                                wordSetName: wordSetName, 
+                                flashcardId: item.id });
+                          }
+                        }}
                         className="bg-white w-[80vw] h-16 justify-center mb-5 shadow-sm rounded-xl">
                         <Text className="font-[dangrek] text-4xl pt-6 pl-6">{item.english_word}</Text>
                         {editMode && (

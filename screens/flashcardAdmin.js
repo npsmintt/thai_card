@@ -16,7 +16,7 @@ import { ChevronLeftIcon } from 'react-native-heroicons/solid';
 export default function FlashcardAdmin(props) {
   const navigation = props.navigation;
   const { categoryName, wordSetName, flashcardId } = props.route.params;
-  const [flashcard, setFlashcard] = useState([]);
+  const [flashcard, setFlashcard] = useState(null);
   const flipAnimation = useRef(new Animated.Value(0)).current;
   const [flipped, setFlipped] = useState(false);
   const [fontsLoaded] = useFonts({
@@ -27,8 +27,7 @@ export default function FlashcardAdmin(props) {
     const fetchFlashcard = async () => {
         try {
             const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/findcard/${flashcardId}`);
-            setFlashcard(response.data);
-            console.log(flashcard)
+            setFlashcard(response.data[0]);
         } catch (error) {
             console.error(error);
         }
@@ -36,8 +35,6 @@ export default function FlashcardAdmin(props) {
 
     fetchFlashcard();
   }, [flashcardId]);
-
-  const card = flashcard[0]
 
   const handleFlip = () => {
     Animated.timing(flipAnimation, {
@@ -61,11 +58,9 @@ export default function FlashcardAdmin(props) {
   const handleDelete = async (id) => {
     try {
         await axios.post('https://exciting-monster-living.ngrok-free.app/wordDelete', { id });
-        // Assuming successful deletion, update the state or refetch data
         navigation.goBack()
     } catch (error) {
       console.error('Error deleting word:', error);
-      // Handle error state or alert user
     }
   };
 
@@ -99,7 +94,7 @@ export default function FlashcardAdmin(props) {
                   flipped ? styles.hidden : null
                 ]}>
                 <View className="bg-white w-[100%] h-[100%] mb-10 justify-center items-center shadow-sm rounded-xl">
-                  <Text className="font-[dangrek] text-5xl pt-5">{card.english_word}</Text>
+                  <Text className="font-[dangrek] text-5xl pt-5">{flashcard ? flashcard.english_word : ''}</Text>
                 </View>
               </Animated.View>
               <Animated.View
@@ -109,8 +104,8 @@ export default function FlashcardAdmin(props) {
                   !flipped ? styles.hidden : null
                 ]}>
                 <View className="bg-white w-80 h-[132vw] mb-10 justify-center items-center shadow-sm rounded-xl">
-                  <Text className="text-5xl pt-3 mb-5">{card.thai_word}</Text>
-                  <Text className="text-5xl">{card.pronunciation}</Text>
+                  <Text className="text-5xl pt-3 mb-5">{flashcard ? flashcard.thai_word : ''}</Text>
+                  <Text className="text-5xl">{flashcard ? flashcard.pronunciation : ''}</Text>
                 </View>
               </Animated.View>
             </TouchableOpacity>

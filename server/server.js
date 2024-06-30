@@ -179,16 +179,17 @@ app.get('/wordSet/:categoryId', (req, res) => {
 app.get('/flashcards/:wordSetId', (req, res) => { 
   const wordSetId = req.params.wordSetId;
   db.query('SELECT * FROM flashcards WHERE word_set_id = ?', [wordSetId], (error, results) => {
-      if (error) throw error;
-      res.send(results);
+    if (error) throw error;
+    res.send(results);
   });
 });
 
 app.get('/findcard/:wordId', (req, res) => {
   const wordId = req.params.wordId;
   db.query('SELECT * FROM flashcards WHERE id = ?', [wordId], (error, results) => {
-      if (error) throw error;
-      res.send(results);
+    if (error) throw error;
+    console.log(results);
+    res.send(results);
   });
 });
 
