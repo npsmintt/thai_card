@@ -12,6 +12,7 @@ import { useFonts } from "expo-font";
 import axios from 'axios';
 import { XMarkIcon, PencilIcon, XCircleIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
 import SearchInput, { createFilter } from 'react-native-search-filter';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function WordDict(props) {
   const navigation = props.navigation;
@@ -24,19 +25,25 @@ export default function WordDict(props) {
     Dangrek_400Regular,
   });
 
-  useEffect(() => {
-    const fetchFlashcards = async () => {
-        try {
-            const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/flashcards/${wordSetId}`);
-            setFlashcards(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+  const fetchFlashcards = async () => {
+    try {
+      const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/flashcards/${wordSetId}`);
+      setFlashcards(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
     fetchFlashcards();
   }, [wordSetId]);
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchFlashcards();
+    }, [wordSetId])
+  );
+  
   const handleEdit = () => {
     setEditMode(prevMode => !prevMode);
   };
@@ -51,7 +58,7 @@ export default function WordDict(props) {
       console.error('Error deleting word:', error);
       // Handle error state or alert user
     }
-    };
+  };
 
   if (!fontsLoaded) {
     return <Text>Font Loading...</Text>;
@@ -96,7 +103,7 @@ export default function WordDict(props) {
                 {filteredFlashcards.map((item, index) => (
                     <TouchableOpacity 
                         key={index}
-                        onPress={() => navigation.navigate('FlashcardAdmin', { user_id: user_id, username: username, email: email, categoryName: categoryName, img: img, type: type, flashcardId: item.id })} 
+                        onPress={() => navigation.navigate('FlashcardAdmin', { categoryName: categoryName, wordSetName: wordSetName, flashcardId: item.id })} 
                         className="bg-white w-[80vw] h-16 justify-center mb-5 shadow-sm rounded-xl">
                         <Text className="font-[dangrek] text-4xl pt-6 pl-6">{item.english_word}</Text>
                         {editMode && (
