@@ -68,18 +68,19 @@ export default function AddWord(props) {
   const handleAddWord = (event) => {
     const err = validation(values);
       setErrors(err);
-      if(err.english_word === "" && err.thai_word === "" && err.pronunciation === "") {
+      if (err.english_word === "" && err.thai_word === "" && err.pronunciation === "") {
         axios.post('https://exciting-monster-living.ngrok-free.app/addWord', { values })
-        .then(async (res) => {
-          if(res.data.status === "Success") {
-            console.log('data', res.data)
-            navigation.navigate("WordDict", { user_id, username, email, categoryName, wordSetId, wordSetName, img, type });
-          } else {
-            console.log('values', values)
-            setErrors(prev => ({ ...prev, english_word: "This word is existed" }));
-          }
+          .then(async (res) => {
+            if (res.data.status === "Success") {
+              console.log('data', res.data)
+              navigation.navigate("WordDict", { user_id, username, email, categoryName, wordSetId, wordSetName, img, type });
+            } else {
+              setErrors(prev => ({ ...prev, limit: res.data.status }));
+              // console.log('limit error', errors.limit)
+            }
         })
         .catch(err => {
+          console.log('limit error', errors.limit)
           console.log("Axios error:", err);
         });
       }
@@ -97,7 +98,7 @@ export default function AddWord(props) {
         >
           <ChevronLeftIcon size={23} stroke={50} color="#434343" />
         </TouchableOpacity>
-        <Text className="font-[dangrek] text-white pt-8 text-4xl">Add Set</Text>
+        <Text className="font-[dangrek] text-white pt-8 text-4xl">Add Card</Text>
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View className="flex-1 bg-[#CCE0FF] items-center pt-8">
@@ -192,7 +193,7 @@ export default function AddWord(props) {
         </View>
         {errors.pronunciation && <Text style={styles.text}>{errors.pronunciation}</Text>}
         <Text className="font-[dangrek] text-3xl items-center justify-center pt-4">Image</Text>
-        <View className="bg-white w-80 py-3 rounded-xl justify-center">
+        <View className="bg-white w-80 py-3 mb-3 rounded-xl justify-center">
           <TextInput
             name="imgUrl"
             style={styles.inputText}
@@ -209,6 +210,7 @@ export default function AddWord(props) {
             <ArrowUpTrayIcon size={30} color={'#fff'} className="items-center justify-center"/>
           </TouchableOpacity>
         </View>
+        {errors.limit && <Text style={styles.text}>{errors.limit}</Text>}
         <View className="justify-between mb-12">
           <TouchableOpacity onPress={handleAddWord} className="bg-[#3EC928] w-80 py-3 mt-5 rounded-xl items-center">
             <Text className="font-[dangrek] text-white pt-4 text-3xl">Add</Text>

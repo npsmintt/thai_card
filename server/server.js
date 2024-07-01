@@ -315,13 +315,20 @@ app.post('/addWord', (req, res) => {
   console.log(values);
 
   db.query(sql, values, (err, data) => {
-      if (err) {
-          console.error('Error adding word:', err);
-          return res.json({ status: "Failed" });
+    console.log('values', values)
+    if (err) {
+      if (err.sqlState === '45000') {
+        return res.json({ status: err.sqlMessage });
+      } else {
+        console.error('Error adding word:', err);
+        return res.json({ status: "Failed" }); 
       }
-      return res.json({ status: "Success" });
+    }
+    
+    return res.json({ status: "Success" }); // Successful insertion
   });
 });
+
 
 app.listen(3000, ()=> {
   console.log("listening at port 3000")
