@@ -1,20 +1,18 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   AppRegistry,
   SafeAreaView,
   TouchableOpacity,
-  FlatList,
   Image,
   ScrollView,
   Text,
   View,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";
 import axios from 'axios';
-import { Cog6ToothIcon } from 'react-native-heroicons/solid';
+import { PlusIcon, Cog6ToothIcon } from 'react-native-heroicons/solid';
 
 export default function TopicSelect(props) {
   const navigation = props.navigation;
@@ -36,33 +34,32 @@ export default function TopicSelect(props) {
     'user7.png': require('../assets/user7.png'),
   }
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-        try {
-            const response = await axios.get('https://exciting-monster-living.ngrok-free.app/categories');
-            setCategories(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    fetchCategories();
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
+      const fetchCategories = async () => {
+        try {
+          const response = await axios.get('https://exciting-monster-living.ngrok-free.app/categories');
+          setCategories(response.data);
+        } catch (error) {
+          console.error('Error fetching categories:', error);
+        }
+      };
+
       const fetchUserData = async () => {
         try {
           const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/getUser`, { params: { email } });
           setImg(response.data.img);
-          setUsername(response.data.username)
+          setUsername(response.data.username);
         } catch (error) {
+          console.log('email', email)
           console.error('Error fetching user data:', error);
         }
       };
 
+      fetchCategories();
       fetchUserData();
-    }, [email])
+
+    }, []) 
   );
 
   if (!fontsLoaded) {
@@ -92,13 +89,21 @@ export default function TopicSelect(props) {
         {categories.map(item => (
             <TouchableOpacity 
               key={item.id}
-              onPress={() => navigation.navigate('SetSelect', { user_id: user_id, username: username, email: email, categoryId: item.id, categoryName: item.name, img: img, type: type })} 
+              onPress={() => navigation.navigate('SetSelect', { user_id: user_id, username: username, email: email, password: password, categoryId: item.id, categoryName: item.name, img: img, type: type })} 
               className="bg-white w-[80vw] h-32 mb-5 justify-center items-center shadow-sm rounded-xl">
               <Text className="font-[dangrek] text-4xl mt-4 p-10">{item.name}</Text>
             </TouchableOpacity>
           ))}
       </View>
       </ScrollView>
+      {type === 'admin' && (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("AddCategory", { user_id, username, email, password })}
+          className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-10"
+        >
+          <PlusIcon size={30} color={'white'} />
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   AppRegistry,
   SafeAreaView,
@@ -8,19 +8,21 @@ import {
   View,
 } from "react-native";
 import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
+import { useFocusEffect } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import axios from 'axios';
-import { ChevronLeftIcon } from 'react-native-heroicons/solid';
+import { PlusIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
 
 export default function SetSelect(props) {
   const navigation = props.navigation;
-  const { user_id, username, email, categoryId, categoryName, img, type } = props.route.params;
+  const { user_id, username, email, password, categoryId, categoryName, img, type } = props.route.params;
   const [wordSet, setWordSet] = useState([]);
   const [fontsLoaded] = useFonts({
     Dangrek_400Regular,
   });
 
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
     const fecthWordSet = async () => {
         try {
             const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/wordSet/${categoryId}`);
@@ -31,7 +33,8 @@ export default function SetSelect(props) {
     };
 
     fecthWordSet();
-  }, []);
+    }, [])
+  );
 
   if (!fontsLoaded) {
     return <Text>Font Loading...</Text>;
@@ -58,6 +61,7 @@ export default function SetSelect(props) {
                     user_id: user_id,
                     username: username,
                     email: email,
+                    password: password,
                     categoryName: categoryName,
                     wordSetId: item.id,
                     wordSetName: item.name,
@@ -69,6 +73,7 @@ export default function SetSelect(props) {
                     user_id: user_id,
                     username: username,
                     email: email,
+                    password: password,
                     categoryName: categoryName,
                     wordSetId: item.id,
                     wordSetName: item.name,
@@ -83,6 +88,13 @@ export default function SetSelect(props) {
           ))}
       </View>
       </ScrollView>
+      {type === 'admin' && (
+        <TouchableOpacity 
+          onPress={() => navigation.navigate("AddSet", { user_id, username, email, password, categoryId, categoryName, img, type })}
+          className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-10">
+          <PlusIcon size={30} color={'white'}/>
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 }

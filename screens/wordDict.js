@@ -10,7 +10,7 @@ import {
 import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";
 import axios from 'axios';
-import { XMarkIcon, PencilIcon, XCircleIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
+import { PlusIcon, XMarkIcon, PencilIcon, XCircleIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
 import SearchInput, { createFilter } from 'react-native-search-filter';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -25,21 +25,18 @@ export default function WordDict(props) {
     Dangrek_400Regular,
   });
 
-  const fetchFlashcards = async () => {
-    try {
-      const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/flashcards/${wordSetId}`);
-      setFlashcards(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchFlashcards();
-  }, [wordSetId]);
-
+  
   useFocusEffect(
     useCallback(() => {
+    const fetchFlashcards = async () => {
+      try {
+        const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/flashcards/${wordSetId}`);
+        setFlashcards(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
       fetchFlashcards();
     }, [wordSetId])
   );
@@ -123,6 +120,11 @@ export default function WordDict(props) {
                     
             </View>
         </ScrollView>
+        <TouchableOpacity 
+          onPress={() => navigation.navigate("AddWord", { user_id, username, email, categoryName, wordSetId, wordSetName, img, type })}
+          className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-10">
+          <PlusIcon size={30} color={'white'}/>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

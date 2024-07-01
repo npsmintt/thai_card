@@ -280,6 +280,49 @@ app.post('/wordDelete', (req, res) => {
   });
 });
 
+app.post('/addCategory', (req, res) => {
+  const { newCategoryName } = req.body;
+  const sql = `INSERT INTO categories (name) VALUES (?)`;
+
+  db.query(sql, [newCategoryName], (err, data) => {
+      if (err) {
+          console.error('Error adding category:', err);
+          return res.json({ status: "Failed" });
+      }
+      return res.json({ status: "Success" });
+  });
+});
+
+app.post('/addSet', (req, res) => {
+  const { categoryId, setName } = req.body;
+  const sql = `INSERT INTO word_sets (category_id, name) VALUES (?, ?)`;
+
+  db.query(sql, [categoryId, setName], (err, data) => {
+      if (err) {
+          console.error('Error adding set:', err);
+          return res.json({ status: "Failed" });
+      }
+      return res.json({ status: "Success" });
+  });
+});
+
+app.post('/addWord', (req, res) => {
+  const { wordSetId, english_word, thai_word, pronunciation, image_url } = req.body.values;
+  const sql = `INSERT INTO flashcards (word_set_id, english_word, thai_word, pronunciation, image_url) 
+              VALUES (?, ?, ?, ?, ?)`;
+  const values = [wordSetId, english_word, thai_word, pronunciation, image_url];
+  console.log(req.body);
+  console.log(values);
+
+  db.query(sql, values, (err, data) => {
+      if (err) {
+          console.error('Error adding word:', err);
+          return res.json({ status: "Failed" });
+      }
+      return res.json({ status: "Success" });
+  });
+});
+
 app.listen(3000, ()=> {
   console.log("listening at port 3000")
 });
