@@ -98,7 +98,7 @@ export default function TopicSelect(props) {
       </ScrollView>
       {type === 'admin' && (
         <TouchableOpacity
-          onPress={() => navigation.navigate("AddCategory", { user_id, username, email, password })}
+          onPress={() => navigation.navigate("AddCategory", { user_id, username, email, password, type })}
           className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-10"
         >
           <PlusIcon size={30} color={'white'} />
