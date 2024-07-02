@@ -70,7 +70,6 @@ export default function TopicSelect(props) {
   }
   return (
     <SafeAreaView className="flex-1 bg-[#397CE1]">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View className="h-20 px-4 mb-12 justfy-center items-center">
         {img ? (
           <Image source={imageSources[img]} className="w-20 h-20 mb-2"/>
@@ -87,6 +86,7 @@ export default function TopicSelect(props) {
           <Cog6ToothIcon size="50" color="#fff"/>
         </TouchableOpacity>
       </View>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View className="flex-1 bg-[#CCE0FF] items-center pt-8">
         <Text className="mb-5 font-[dangrek] text-3xl pt-1 text-white text-center shadow-sm">Please select the topic</Text>
         {categories.map(item => (
