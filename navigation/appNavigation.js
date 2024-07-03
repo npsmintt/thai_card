@@ -13,6 +13,10 @@ import User from '../screens/user';
 import PicSetting from '../screens/picSetting';
 import SetSelect from '../screens/setSelect';
 import WordDict from '../screens/wordDict';
+import FlashcardAdmin from '../screens/flashcardAdmin';
+import AddCategory from '../screens/addCategory';
+import AddSet from '../screens/addSet';
+import AddWord from '../screens/addWord';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +39,10 @@ export default function AppNavigation() {
         <Stack.Screen name="User" options={{headerShown: false}} component={User} />
         <Stack.Screen name="PicSetting" options={{headerShown: false}} component={PicSetting} />
         <Stack.Screen name="WordDict" options={{headerShown: false}} component={WordDict} />
+        <Stack.Screen name="FlashcardAdmin" options={{headerShown: false}} component={FlashcardAdmin} />
+        <Stack.Screen name="AddCategory" options={{headerShown: false}} component={AddCategory} />
+        <Stack.Screen name="AddSet" options={{headerShown: false}} component={AddSet} />
+        <Stack.Screen name="AddWord" options={{headerShown: false}} component={AddWord} />
       </Stack.Navigator>
     </NavigationContainer>
   )

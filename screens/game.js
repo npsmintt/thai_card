@@ -37,7 +37,11 @@ export default function Game(props) {
           { id: `${card.english_word}-${card.thai_word}`, type: 'english', text: card.english_word },
           { id: `${card.english_word}-${card.thai_word}`, type: 'thai', text: card.thai_word, pronunciation: card.pronunciation }
         ]);
-        setShuffledFlashcards(shuffleArray(combinedFlashcards));
+        // setShuffledFlashcards(shuffleArray(combinedFlashcards));
+        const slicedCards = combinedFlashcards.slice(0, 20);
+        const shuffledCards = shuffleArray(slicedCards);
+        setShuffledFlashcards(shuffledCards);
+
       } catch (error) {
         console.error(error);
       }
@@ -187,7 +191,8 @@ export default function Game(props) {
         </Text>
         <View className=" justify-center">
           <View className="flex-row flex-wrap justify-center ml-[-8px]">
-          {shuffledFlashcards.slice(0, 20).map((card, index) => (
+          {/* {shuffledFlashcards.slice(0, 20).map((card, index) => ( */}
+          {shuffledFlashcards.map((card, index) => (
             <TouchableOpacity
               key={index}
               onPress={() => handleCardPress(index)}

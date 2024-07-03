@@ -176,11 +176,20 @@ app.get('/wordSet/:categoryId', (req, res) => {
   });
 });
 
-app.get('/flashcards/:wordSetId', (req, res) => { // เดี๋ยวเปลี่ยนเป็น set ทีหลัง
+app.get('/flashcards/:wordSetId', (req, res) => { 
   const wordSetId = req.params.wordSetId;
   db.query('SELECT * FROM flashcards WHERE word_set_id = ?', [wordSetId], (error, results) => {
-      if (error) throw error;
-      res.send(results);
+    if (error) throw error;
+    res.send(results);
+  });
+});
+
+app.get('/findcard/:wordId', (req, res) => {
+  const wordId = req.params.wordId;
+  db.query('SELECT * FROM flashcards WHERE id = ?', [wordId], (error, results) => {
+    if (error) throw error;
+    console.log(results);
+    res.send(results);
   });
 });
 
@@ -235,15 +244,19 @@ app.post('/game', (req, res) => {
 app.get('/leaderboard/:wordSetId', (req, res) => {
   const word_set_id = req.params.wordSetId;
   db.query(
-    'SELECT @rank := @rank + 1 AS `rank`, img, u.username, l.finished_time \
-    FROM leaderboard l \
-    JOIN (SELECT @rank := 0) r \
-    JOIN user u ON l.user_id = u.id \
-    WHERE l.word_set_id = ? \
-    ORDER BY l.finished_time ASC',
+    `SELECT @rank := @rank + 1 AS 'rank', t.img, t.username, t.finished_time
+     FROM (
+       SELECT u.img, u.username, l.finished_time
+       FROM leaderboard l
+       JOIN user u ON l.user_id = u.id
+       WHERE l.word_set_id = ?
+       ORDER BY l.finished_time ASC
+     ) t
+     JOIN (SELECT @rank := 0) r`,
     [word_set_id],
     (error, results) => {
       if (error) {
+        console.log(results)
         console.error('Error fetching leaderboard:', error);
         res.status(500).json({ error: 'Internal server error' });
       } else {
@@ -252,6 +265,70 @@ app.get('/leaderboard/:wordSetId', (req, res) => {
     }
   );
 });
+
+app.post('/wordDelete', (req, res) => {
+  const { id } = req.body;
+  const sql = 'DELETE FROM flashcards WHERE id = ?';
+
+  db.query(sql, [id], (err, result) => {
+      if (err) {
+          console.error('Error deleting word:', err);
+          res.status(500).send('Error deleting word');
+          return;
+      }
+      res.status(200).send('Word deleted successfully');
+  });
+});
+
+app.post('/addCategory', (req, res) => {
+  const { newCategoryName } = req.body;
+  const sql = `INSERT INTO categories (name) VALUES (?)`;
+
+  db.query(sql, [newCategoryName], (err, data) => {
+      if (err) {
+          console.error('Error adding category:', err);
+          return res.json({ status: "Failed" });
+      }
+      return res.json({ status: "Success" });
+  });
+});
+
+app.post('/addSet', (req, res) => {
+  const { categoryId, setName } = req.body;
+  const sql = `INSERT INTO word_sets (category_id, name) VALUES (?, ?)`;
+
+  db.query(sql, [categoryId, setName], (err, data) => {
+      if (err) {
+          console.error('Error adding set:', err);
+          return res.json({ status: "Failed" });
+      }
+      return res.json({ status: "Success" });
+  });
+});
+
+app.post('/addWord', (req, res) => {
+  const { wordSetId, english_word, thai_word, pronunciation, image_url } = req.body.values;
+  const sql = `INSERT INTO flashcards (word_set_id, english_word, thai_word, pronunciation, image_url) 
+              VALUES (?, ?, ?, ?, ?)`;
+  const values = [wordSetId, english_word, thai_word, pronunciation, image_url];
+  console.log(req.body);
+  console.log(values);
+
+  db.query(sql, values, (err, data) => {
+    console.log('values', values)
+    if (err) {
+      if (err.sqlState === '45000') {
+        return res.json({ status: err.sqlMessage });
+      } else {
+        console.error('Error adding word:', err);
+        return res.json({ status: "Failed" }); 
+      }
+    }
+    
+    return res.json({ status: "Success" }); // Successful insertion
+  });
+});
+
 
 app.listen(3000, ()=> {
   console.log("listening at port 3000")
