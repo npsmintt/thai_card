@@ -7,7 +7,6 @@ import {
   Text,
   View,
   Animated,
-  Dimensions,
 } from "react-native";
 import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";

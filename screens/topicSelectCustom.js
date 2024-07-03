@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   AppRegistry,
   SafeAreaView,
@@ -75,6 +75,7 @@ export default function TopicSelectCustom(props) {
 
   const handleAddNavigate = () => {
     setIsIconsVisible(!isIconsVisible);
+    setEditMode(false);
     navigation.navigate("AddUserSet", { user_id, username, email, img, password, type })
   }
 
@@ -88,11 +89,11 @@ export default function TopicSelectCustom(props) {
 
   const handleEdit = () => {
     setEditMode(prevMode => !prevMode);
-    setIsIconsVisible(!isIconsVisible);
+    setIsIconsVisible(false);
   };
 
   const handleCancelEdit = () => {
-    setEditMode(prevMode => !prevMode);
+    setEditMode(false);
   }
 
   const SideMenu = () => (
@@ -152,7 +153,7 @@ export default function TopicSelectCustom(props) {
       <View className="flex-1 bg-[#CCE0FF] items-center pt-8">
       {userSets && userSets.length > 0 ? (
         <>
-          <Text className="mb-5 font-[dangrek] text-3xl pt-1 text-white text-center shadow-sm">Please select vocabulary set</Text>
+          <Text className="mb-5 font-[dangrek] text-3xl pt-1 text-white text-center shadow-sm">Custom Mode</Text>
           {userSets.map(item => (
             <TouchableOpacity 
               key={item.id}

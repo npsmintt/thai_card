@@ -8,11 +8,11 @@ import {
   View,
   Animated,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";
 import axios from 'axios';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
+import * as Speech from 'expo-speech';
 
 export default function GameCustom(props) {
   const navigation = props.navigation;
@@ -97,6 +97,11 @@ export default function GameCustom(props) {
     if (selectedCards.length < 2 && !selectedCards.includes(index)) {
       const newSelectedCards = [...selectedCards, index];
       setSelectedCards(newSelectedCards);
+
+      const clickedCard = shuffledFlashcards[index];
+      if (clickedCard.type === 'thai') {
+        speakThai(clickedCard.text);
+      }
   
       if (newSelectedCards.length === 2) {
         const firstCard = shuffledFlashcards[newSelectedCards[0]];
@@ -119,6 +124,13 @@ export default function GameCustom(props) {
         }
       }
     }
+  };
+
+  const speakThai = (text) => {
+    Speech.speak(text, { 
+      language: 'th-TH',
+      voice: 'com.apple.ttsbundle.Kanya-premium',
+    });
   };
 
   const handleGameFinish = () => {
@@ -157,8 +169,11 @@ export default function GameCustom(props) {
 
   const getCardStyle = (index) => {
     const card = shuffledFlashcards[index];
-    const cardWidth = card.text.length > 19 ? { width: 198 } : {};
-    const cardPadding = card.text.length > 19 ? { paddingHorizontal: 16 } : {};
+    const isLongPronunciation = card.type === 'thai' && card.pronunciation && card.pronunciation.length > 19;
+    const isLongEnglish = card.type === 'english' && card.text.length > 9;
+
+    const cardWidth = isLongPronunciation || isLongEnglish ? { width: 198 } : {};
+    const cardPadding = isLongPronunciation || isLongEnglish ? { paddingHorizontal: 16 } : {};
 
     if (matchedCards.includes(index)) {
       return { ...styles.card, ...styles.matchedCard, ...cardWidth, ...cardPadding };

@@ -162,7 +162,7 @@ export default function TopicSelect(props) {
       {isMenuOpen && <SideMenu />}
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View className="flex-1 bg-[#CCE0FF] items-center pt-8">
-        <Text className="mb-5 font-[dangrek] text-3xl pt-1 text-white text-center shadow-sm">Please select the topic</Text>
+        <Text className="mb-5 font-[dangrek] text-3xl pt-1 text-white text-center shadow-sm">Challenge Mode</Text>
         {categories.map(item => (
             <TouchableOpacity 
               key={item.id}

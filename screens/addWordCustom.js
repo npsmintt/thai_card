@@ -14,6 +14,7 @@ import { useFonts } from "expo-font";
 import axios from 'axios';
 import { ArrowUpTrayIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
 import validation from "../validations/addWordValidation";
+import * as Speech from 'expo-speech';
 
 export default function AddWordCustom(props) {
   const navigation = props.navigation;
@@ -54,6 +55,7 @@ export default function AddWordCustom(props) {
             ...prev,
             pronunciation: response.data.pronunciation
           }));
+          speakThai(values.thai_word)
         })
         .catch(error => {
           console.error("Error making request:", error);
@@ -63,6 +65,13 @@ export default function AddWordCustom(props) {
 
   const handleInput = (name, value) => {
     setValues(prev => ({ ...prev, [name]: value }));
+  };
+
+  const speakThai = (text) => {
+    Speech.speak(text, { 
+      language: 'th-TH',
+      voice: 'com.apple.ttsbundle.Kanya-premium',
+    });
   };
 
   const handleAddWord = (event) => {

@@ -66,7 +66,7 @@ export default function SetSelect(props) {
   }
   return (
     <SafeAreaView className="flex-1 bg-[#397CE1]">
-      <View className="flex-row h-20 px-4 mb-5 items-center justify-center">
+      <View className="flex-row h-[21.4vw] px-4 mb-5 items-center justify-center">
         <TouchableOpacity onPress={() => navigation.goBack()} className="ml-5 absolute left-0 bg-white rounded-full p-3 shadow">
           <ChevronLeftIcon size={23} stroke={50} color="#434343" />
         </TouchableOpacity>
