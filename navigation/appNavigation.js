@@ -24,6 +24,7 @@ import WordDictCustom from '../screens/wordDictCustom';
 import AddWordCustom from '../screens/addWordCustom';
 import FlashcardPlayer from '../screens/flashcardPlayer';
 import GameCustom from '../screens/gameCustom';
+import LeaderboardCustom from '../screens/leaderboardCustom';
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +58,7 @@ export default function AppNavigation() {
         <Stack.Screen name="AddWordCustom" options={{headerShown: false}} component={AddWordCustom} />
         <Stack.Screen name="FlashcardPlayer" options={{headerShown: false}} component={FlashcardPlayer} />
         <Stack.Screen name="GameCustom" options={{headerShown: false}} component={GameCustom} />
+        <Stack.Screen name="LeaderboardCustom" options={{headerShown: false}} component={LeaderboardCustom} />
       </Stack.Navigator>
     </NavigationContainer>
   )

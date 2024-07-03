@@ -250,6 +250,52 @@ app.post('/game', (req, res) => {
   });
 });
 
+app.post('/gameCustom', (req, res) => {
+  console.log('Received data:', req.body);
+
+  const checkQuery = "SELECT * FROM leaderboardCustom WHERE user_id = ? AND user_sets_id = ?";
+  const checkValues = [req.body.user_id, req.body.user_sets_id];
+
+  db.query(checkQuery, checkValues, (err, result) => {
+    if (err) {
+      console.error('Error checking leaderboard:', err);
+      return res.json("Error");
+    }
+
+    if (result.length > 0) {
+      // Entry already exists, update finished_time
+      const updateQuery = "UPDATE leaderboardCustom SET finished_time = ? WHERE user_id = ? AND user_sets_id = ?";
+      const updateValues = [req.body.finished_time, req.body.user_id, req.body.user_sets_id];
+
+      db.query(updateQuery, updateValues, (err, updateResult) => {
+        if (err) {
+          console.error('Error updating leaderboard:', err);
+          return res.json("Error");
+        }
+        console.log('Data updated:', updateResult);
+        return res.json(updateResult);
+      });
+    } else {
+      // Entry does not exist, insert new record
+      const insertQuery = "INSERT INTO leaderboardCustom (`user_id`, `user_sets_id`, `finished_time`) VALUES (?, ?, ?)";
+      const insertValues = [
+        req.body.user_id,
+        req.body.user_sets_id,
+        req.body.finished_time
+      ];
+
+      db.query(insertQuery, insertValues, (err, insertResult) => {
+        if (err) {
+          console.error('Error inserting into leaderboard:', err);
+          return res.json("Error");
+        }
+        console.log('Data inserted:', insertResult);
+        return res.json(insertResult);
+      });
+    }
+  });
+});
+
 app.get('/leaderboard/:wordSetId', (req, res) => {
   const word_set_id = req.params.wordSetId;
   db.query(
@@ -263,6 +309,31 @@ app.get('/leaderboard/:wordSetId', (req, res) => {
      ) t
      JOIN (SELECT @rank := 0) r`,
     [word_set_id],
+    (error, results) => {
+      if (error) {
+        console.log(results)
+        console.error('Error fetching leaderboard:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      } else {
+        res.status(200).json(results);
+      }
+    }
+  );
+});
+
+app.get('/leaderboardCustom/:userSetId', (req, res) => {
+  const user_sets_id = req.params.userSetId;
+  db.query(
+    `SELECT @rank := @rank + 1 AS 'rank', t.img, t.username, t.finished_time
+     FROM (
+       SELECT u.img, u.username, l.finished_time
+       FROM leaderboardCustom l
+       JOIN user u ON l.user_id = u.id
+       WHERE l.user_sets_id = ?
+       ORDER BY l.finished_time ASC
+     ) t
+     JOIN (SELECT @rank := 0) r`,
+    [user_sets_id],
     (error, results) => {
       if (error) {
         console.log(results)

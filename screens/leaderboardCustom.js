@@ -14,9 +14,9 @@ import axios from 'axios';
 import { ArrowPathIcon } from 'react-native-heroicons/solid';
 
 
-export default function Leaderboard(props) {
+export default function LeaderboardCustom(props) {
   const navigation = props.navigation;
-  const { user_id, username, email, categoryName, wordSetId, wordSetName, img } = props.route.params;
+  const { user_id, username, email, userSetId, userSetName, img } = props.route.params;
   const [leaderboard, setLeaderboard] = useState([]);
   const [fontsLoaded] = useFonts({
     Dangrek_400Regular,
@@ -35,7 +35,7 @@ export default function Leaderboard(props) {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/leaderboard/${wordSetId}`);
+        const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/leaderboardCustom/${userSetId}`);
         setLeaderboard(response.data);
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
@@ -63,7 +63,7 @@ export default function Leaderboard(props) {
       <View className="flex-1 bg-[#CCE0FF] pt-5">
         <View className="justify-center items-center mb-2">
           <Text className="font-[dangrek] text-white shadow-sm text-6xl pt-6 mb-[-4vw]">Leaderbord</Text>
-          <Text className="font-[dangrek] text-white shadow-sm text-3xl pt-1">{categoryName} - {wordSetName}</Text>
+          <Text className="font-[dangrek] text-white shadow-sm text-3xl pt-1">{userSetName}</Text>
         </View>
         <View className="flex-1 px-6">
         <FlatList
@@ -84,13 +84,13 @@ export default function Leaderboard(props) {
         </View>
         <View className="flex-row space-x-5 justify-center items-center mb-5">
         <TouchableOpacity 
-          onPress={() => navigation.navigate('Game', { user_id: user_id, username: username, categoryName: categoryName, wordSetId: wordSetId, wordSetName: wordSetName, img: img })}
+          onPress={() => navigation.navigate('GameCustom', { user_id: user_id, username: username, userSetId: userSetId, userSetName: userSetName, img: img })}
           className="bg-[#397CE1] rounded-lg w-36 h-20 justify-center items-center"
         >
           <ArrowPathIcon size={40} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity 
-          onPress={() => navigation.navigate('TopicSelect', { user_id: user_id, username: username, email: email })}
+          onPress={() => navigation.navigate('TopicSelectCustom', { user_id: user_id, username: username, email: email })}
           className="bg-[#3EC928] rounded-lg w-36 h-20 justify-center items-center"
         >
           <Text className="font-[dangrek] text-white text-5xl pt-9">Done</Text>
@@ -101,4 +101,4 @@ export default function Leaderboard(props) {
   );
 }
 
-AppRegistry.registerComponent("Leaderboard", () => Leaderboard);
+AppRegistry.registerComponent("LeaderboardCustom", () => LeaderboardCustom);

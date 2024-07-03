@@ -125,15 +125,15 @@ export default function GameCustom(props) {
     setIsTimerRunning(false);
     const formattedTime = formatTime(timer);
 
-    axios.post('https://exciting-monster-living.ngrok-free.app/game', {
+    axios.post('https://exciting-monster-living.ngrok-free.app/gameCustom', {
       user_id: user_id,
-      word_set_id: wordSetId,
+      user_sets_id: userSetId,
       finished_time: formattedTime
     })
     .then(response => {
       console.log('Leaderboard updated:', response.data);
       resetGame();
-      navigation.navigate('Leaderboard', { user_id, username, email, userSetId, userSetName, img});
+      navigation.navigate('LeaderboardCustom', { user_id, username, email, userSetId, userSetName, img});
     })
     .catch(error => {
       console.error('Error updating leaderboard:', error);
