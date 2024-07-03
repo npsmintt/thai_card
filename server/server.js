@@ -303,6 +303,20 @@ app.post('/wordDeleteCustom', (req, res) => {
   });
 });
 
+app.post('/setDeleteCustom', (req, res) => {
+  const { id } = req.body;
+  const sql = 'DELETE FROM user_sets WHERE id = ?';
+
+  db.query(sql, [id], (err, result) => {
+      if (err) {
+          console.error('Error deleting set:', err);
+          res.status(500).send('Error deleting set');
+          return;
+      }
+      res.status(200).send('Set deleted successfully');
+  });
+});
+
 app.post('/addCategory', (req, res) => {
   const { newCategoryName } = req.body;
   const sql = `INSERT INTO categories (name) VALUES (?)`;

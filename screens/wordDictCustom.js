@@ -10,7 +10,7 @@ import {
 import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";
 import axios from 'axios';
-import { PlusIcon, XMarkIcon, PencilIcon, XCircleIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
+import { XMarkIcon, PencilIcon, XCircleIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
 import SearchInput, { createFilter } from 'react-native-search-filter';
 import { useFocusEffect } from '@react-navigation/native';
 

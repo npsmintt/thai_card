@@ -12,7 +12,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";
 import axios from 'axios';
-import { PlusIcon, XMarkIcon, Bars3Icon, Cog6ToothIcon } from 'react-native-heroicons/solid';
+import { EllipsisHorizontalIcon, PencilIcon, PlusIcon, XMarkIcon, XCircleIcon, Bars3Icon, Cog6ToothIcon } from 'react-native-heroicons/solid';
 
 export default function TopicSelectCustom(props) {
   const navigation = props.navigation;
@@ -24,6 +24,8 @@ export default function TopicSelectCustom(props) {
   const [img, setImg] = useState(initialImg);
   const [username, setUsername] = useState(initialUsername)
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isIconsVisible, setIsIconsVisible] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const imageSources = {
     'user-default.png': require('../assets/user-default.png'),
     'user1.png': require('../assets/user1.png'),
@@ -61,9 +63,37 @@ export default function TopicSelectCustom(props) {
     }, [email, user_id])
   );
 
+  const handleDelete = async (id) => {
+    try {
+        await axios.post('https://exciting-monster-living.ngrok-free.app/setDeleteCustom', { id });
+        const updatedsets = userSets.filter(card => card.id !== id);
+        setUserSets(updatedsets);
+    } catch (error) {
+      console.error('Error deleting word:', error);
+    }
+  };
+
+  const handleAddNavigate = () => {
+    setIsIconsVisible(!isIconsVisible);
+    navigation.navigate("AddUserSet", { user_id, username, email, img, password, type })
+  }
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const toggleIcons = () => {
+    setIsIconsVisible(!isIconsVisible);
+  };
+
+  const handleEdit = () => {
+    setEditMode(prevMode => !prevMode);
+    setIsIconsVisible(!isIconsVisible);
+  };
+
+  const handleCancelEdit = () => {
+    setEditMode(prevMode => !prevMode);
+  }
 
   const SideMenu = () => (
     <View className="w-full h-auto bg-[#397CE1] items-center">
@@ -103,12 +133,19 @@ export default function TopicSelectCustom(props) {
         <Text className="font-[dangrek] text-white text-xl">
           {`Hello, ${username}`}
         </Text>
-        <TouchableOpacity 
+        {!editMode ? (
+          <TouchableOpacity 
           onPress={()=> navigation.navigate('User', {user_id: user_id, username: username, email: email, password: password})} 
           className="absolute right-0 pr-5 pt-8 shadow-sm"
         >
           <Cog6ToothIcon size="50" color="#fff"/>
         </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={handleCancelEdit} 
+            className="absolute right-0 pr-5 pt-8 shadow-sm">
+              <XMarkIcon size={50} color="#fff" />
+          </TouchableOpacity>
+        )}
       </View>
       {isMenuOpen && <SideMenu />}
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -127,6 +164,11 @@ export default function TopicSelectCustom(props) {
                 img: img})} 
               className="bg-white w-[80vw] h-32 mb-5 justify-center items-center shadow-sm rounded-xl">
               <Text className="font-[dangrek] text-4xl mt-4 p-10">{item.name}</Text>
+              {editMode && (
+                <TouchableOpacity onPress={() => handleDelete(item.id)} className="absolute right-0 mr-6">
+                    <XCircleIcon size={36} color={'red'}/>
+                </TouchableOpacity>
+              )}
             </TouchableOpacity>
           ))}
         </>
@@ -138,12 +180,35 @@ export default function TopicSelectCustom(props) {
       )}
       </View>
       </ScrollView>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("AddUserSet", { user_id, username, email, img, password, type })}
-        className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-10"
-      >
-        <PlusIcon size={30} color={'white'} />
-      </TouchableOpacity>
+      {!isIconsVisible ? (
+        <TouchableOpacity
+          onPress={toggleIcons} // Toggle icons on EllipsisHorizontalIcon press
+          className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-10"
+        >
+          <EllipsisHorizontalIcon size={30} color={'white'} />
+        </TouchableOpacity>
+      ) : (
+        <>
+          <TouchableOpacity
+            onPress={toggleIcons} // Toggle icons on XMarkIcon press
+            className="absolute right-0 bottom-0 mr-7 p-5 bg-white rounded-full mb-10"
+          >
+            <XMarkIcon size={30} color={'#397CE1'} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleAddNavigate}
+            className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-[30vw]"
+          >
+            <PlusIcon size={30} color={'white'} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleEdit}
+            className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-[50vw]"
+          >
+            <PencilIcon size={30} color={'white'} />
+          </TouchableOpacity>
+        </>
+      )}
     </SafeAreaView>
   );
 }
