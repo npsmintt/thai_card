@@ -193,6 +193,15 @@ app.get('/findcard/:wordId', (req, res) => {
   });
 });
 
+app.get('/findcardCustom/:wordId', (req, res) => {
+  const wordId = req.params.wordId;
+  db.query('SELECT * FROM user_flashcards WHERE id = ?', [wordId], (error, results) => {
+    if (error) throw error;
+    console.log(results);
+    res.send(results);
+  });
+});
+
 app.post('/game', (req, res) => {
   // Log the received request body
   console.log('Received data:', req.body);
@@ -280,6 +289,20 @@ app.post('/wordDelete', (req, res) => {
   });
 });
 
+app.post('/wordDeleteCustom', (req, res) => {
+  const { id } = req.body;
+  const sql = 'DELETE FROM user_flashcards WHERE id = ?';
+
+  db.query(sql, [id], (err, result) => {
+      if (err) {
+          console.error('Error deleting word:', err);
+          res.status(500).send('Error deleting word');
+          return;
+      }
+      res.status(200).send('Word deleted successfully');
+  });
+});
+
 app.post('/addCategory', (req, res) => {
   const { newCategoryName } = req.body;
   const sql = `INSERT INTO categories (name) VALUES (?)`;
@@ -320,6 +343,25 @@ app.post('/addWord', (req, res) => {
         return res.json({ status: "Failed" }); 
       }
     }
+    
+    return res.json({ status: "Success" }); // Successful insertion
+  });
+});
+
+app.post('/addWordCustom', (req, res) => {
+  const { userSetId, english_word, thai_word, pronunciation, image_url } = req.body.values;
+  const sql = `INSERT INTO user_flashcards (user_sets_id, english_word, thai_word, pronunciation, image_url) 
+              VALUES (?, ?, ?, ?, ?)`;
+  const values = [userSetId, english_word, thai_word, pronunciation, image_url];
+  console.log(req.body);
+  console.log(values);
+
+  db.query(sql, values, (err, data) => {
+    console.log('values', values)
+    if (err) {
+        console.error('Error adding word:', err);
+        return res.json({ status: "Failed" }); 
+      }
     
     return res.json({ status: "Success" }); // Successful insertion
   });

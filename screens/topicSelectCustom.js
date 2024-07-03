@@ -119,7 +119,7 @@ export default function TopicSelectCustom(props) {
           {userSets.map(item => (
             <TouchableOpacity 
               key={item.id}
-              onPress={() => navigation.navigate('FlashcardCustom', {user_id: user_id,
+              onPress={() => navigation.navigate('WordDictCustom', {user_id: user_id,
                 username: username,
                 email: email,
                 userSetId: item.id,

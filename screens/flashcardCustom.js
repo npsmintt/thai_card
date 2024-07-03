@@ -15,7 +15,6 @@ import { useFonts } from "expo-font";
 import axios from 'axios';
 import { ArrowPathIcon, ChevronLeftIcon, ChartBarIcon} from 'react-native-heroicons/solid';
 import { PanGestureHandler, GestureHandlerRootView, State } from 'react-native-gesture-handler';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-dimensions';
 
 export default function FlashcardCustom(props) {
   const navigation = props.navigation;
@@ -142,17 +141,12 @@ export default function FlashcardCustom(props) {
             <ChevronLeftIcon size={23} stroke={50} color="#434343" />
           </TouchableOpacity>
           <Text className="font-[dangrek] text-white pt-8 text-4xl">
-            {categoryName}
+            {userSetName}
           </Text>
           {/* <TouchableOpacity onPress={() => navigation.navigate('Leaderboard', { user_id, username, email, categoryName, wordSetId, wordSetName, img})} 
             className="mr-5 absolute right-0 p-3">
             <ChartBarIcon size={30} color="#ffffff"/>
           </TouchableOpacity> */}
-        </View>
-        <View className="items-center justify-center px-4 mb-5 mt-[-2vw]">
-          <Text className="font-[dangrek] text-white text-lg">
-              {wordSetName}
-          </Text>
         </View>
         <View className="flex-0 bg-[#CCE0FF] items-center pt-10">
           <View className="w-80 h-[132vw] relative mb-10">
