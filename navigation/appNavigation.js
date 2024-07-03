@@ -13,6 +13,10 @@ import User from '../screens/user';
 import PicSetting from '../screens/picSetting';
 import SetSelect from '../screens/setSelect';
 import WordDict from '../screens/wordDict';
+import TopicSelectCustom from '../screens/topicSelectCustom';
+import AddUserSet from '../screens/addUserSet';
+import FlashcardCustom from '../screens/flashcardCustom';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +39,9 @@ export default function AppNavigation() {
         <Stack.Screen name="User" options={{headerShown: false}} component={User} />
         <Stack.Screen name="PicSetting" options={{headerShown: false}} component={PicSetting} />
         <Stack.Screen name="WordDict" options={{headerShown: false}} component={WordDict} />
+        <Stack.Screen name="TopicSelectCustom" options={{headerShown: false}} component={TopicSelectCustom} />
+        <Stack.Screen name="AddUserSet" options={{headerShown: false}} component={AddUserSet} />
+        <Stack.Screen name="FlashcardCustom" options={{headerShown: false}} component={FlashcardCustom} />
       </Stack.Navigator>
     </NavigationContainer>
   )

@@ -12,12 +12,12 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";
 import axios from 'axios';
-import { XMarkIcon, Bars3Icon, Cog6ToothIcon } from 'react-native-heroicons/solid';
+import { PlusIcon, XMarkIcon, Bars3Icon, Cog6ToothIcon } from 'react-native-heroicons/solid';
 
-export default function TopicSelect(props) {
+export default function TopicSelectCustom(props) {
   const navigation = props.navigation;
   const { user_id, username: initialUsername, email, password, img: initialImg, type } = props.route.params;
-  const [categories, setCategories] = useState([]);
+  const [userSets, setUserSets] = useState([]);
   const [fontsLoaded] = useFonts({
     Dangrek_400Regular,
   });
@@ -35,59 +35,43 @@ export default function TopicSelect(props) {
     'user7.png': require('../assets/user7.png'),
   }
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-        try {
-            const response = await axios.get('https://exciting-monster-living.ngrok-free.app/categories');
-            setCategories(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    fetchCategories();
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
       const fetchUserData = async () => {
         try {
-          const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/getUser`, { params: { email } });
+          const response = await axios.get('https://exciting-monster-living.ngrok-free.app/getUser', { params: { email } });
           setImg(response.data.img);
-          setUsername(response.data.username)
+          setUsername(response.data.username);
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
       };
-
+  
+      const fetchUserSet = async () => {
+        try {
+          const response = await axios.get('https://exciting-monster-living.ngrok-free.app/userSets', { params: { user_id } });
+          setUserSets(response.data);
+        } catch (error) {
+          console.error('Error fetching user sets:', error);
+        }
+      };
+  
       fetchUserData();
-    }, [email])
+      fetchUserSet();
+    }, [email, user_id])
   );
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handlePress = () => {
-    navigation.navigate('TopicSelectCustom', {
-      user_id: user_id,
-      username: username,
-      email: email,
-      password: password,
-      img: img,
-      type: type
-    });
-  
-    toggleMenu();
-  };
-
   const SideMenu = () => (
     <View className="w-full h-auto bg-[#397CE1] items-center">
-      <TouchableOpacity onPress={toggleMenu} className="bg-white w-full items-center">
-        <Text className="font-[dangrek] text-[#397CE1] text-2xl my-3 pt-3">Challenge Mode</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('TopicSelect', {user_id: user_id, username: username, email: email, password: password, img: img, type: type})}>
+        <Text className="font-[dangrek] text-white text-2xl my-3 pt-3">Challenge Mode</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={handlePress}>
-        <Text className="font-[dangrek] text-white text-2xl my-3 pt-3">Custom Mode</Text>
+      <TouchableOpacity onPress={toggleMenu} className="bg-white w-full items-center">
+        <Text className="font-[dangrek] text-[#397CE1] text-2xl my-3 pt-3">Custom Mode</Text>
       </TouchableOpacity>
     </View>
   );
@@ -129,20 +113,40 @@ export default function TopicSelect(props) {
       {isMenuOpen && <SideMenu />}
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View className="flex-1 bg-[#CCE0FF] items-center pt-8">
-        <Text className="mb-5 font-[dangrek] text-3xl pt-1 text-white text-center shadow-sm">Please select the topic</Text>
-        {categories.map(item => (
+      {userSets && userSets.length > 0 ? (
+        <>
+          <Text className="mb-5 font-[dangrek] text-3xl pt-1 text-white text-center shadow-sm">Please select vocabulary set</Text>
+          {userSets.map(item => (
             <TouchableOpacity 
               key={item.id}
-              onPress={() => navigation.navigate('SetSelect', { user_id: user_id, username: username, email: email, categoryId: item.id, categoryName: item.name, img: img, type: type })} 
+              onPress={() => navigation.navigate('FlashcardCustom', {user_id: user_id,
+                username: username,
+                email: email,
+                userSetId: item.id,
+                userSetName: item.name,
+                img: img})} 
               className="bg-white w-[80vw] h-32 mb-5 justify-center items-center shadow-sm rounded-xl">
               <Text className="font-[dangrek] text-4xl mt-4 p-10">{item.name}</Text>
             </TouchableOpacity>
           ))}
+        </>
+      ) : (
+        <View className="justify-center items-center flex-1 mt-[-20vw]">
+          <Text className="font-[dangrek] text-white shadow-sm text-2xl pt-2">No set available</Text>
+          <Text className="font-[dangrek] text-white shadow-sm text-2xl pt-2">Please add your vocabulary set</Text>
+        </View>
+      )}
       </View>
       </ScrollView>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("AddUserSet", { user_id, username, email, img, password, type })}
+        className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-10"
+      >
+        <PlusIcon size={30} color={'white'} />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
 
-AppRegistry.registerComponent("TopicSelect", () => TopicSelect);
+AppRegistry.registerComponent("TopicSelectCustom", () => TopicSelectCustom);
