@@ -317,6 +317,34 @@ app.post('/setDeleteCustom', (req, res) => {
   });
 });
 
+app.post('/categoryDelete', (req, res) => {
+  const { id } = req.body;
+  const sql = 'DELETE FROM categories WHERE id = ?';
+
+  db.query(sql, [id], (err, result) => {
+      if (err) {
+          console.error('Error deleting category:', err);
+          res.status(500).send('Error deleting category');
+          return;
+      }
+      res.status(200).send('category deleted successfully');
+  });
+});
+
+app.post('/setDelete', (req, res) => {
+  const { id } = req.body;
+  const sql = 'DELETE FROM word_sets WHERE id = ?';
+
+  db.query(sql, [id], (err, result) => {
+      if (err) {
+          console.error('Error deleting set:', err);
+          res.status(500).send('Error deleting set');
+          return;
+      }
+      res.status(200).send('Set deleted successfully');
+  });
+});
+
 app.post('/addCategory', (req, res) => {
   const { newCategoryName } = req.body;
   const sql = `INSERT INTO categories (name) VALUES (?)`;

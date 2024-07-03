@@ -191,19 +191,19 @@ export default function TopicSelectCustom(props) {
         <>
           <TouchableOpacity
             onPress={toggleIcons} // Toggle icons on XMarkIcon press
-            className="absolute right-0 bottom-0 mr-7 p-5 bg-white rounded-full mb-10"
+            className="absolute right-0 bottom-0 mr-7 p-5 bg-white rounded-full mb-10 shadow-lg"
           >
             <XMarkIcon size={30} color={'#397CE1'} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleAddNavigate}
-            className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-[30vw]"
+            className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-[30vw] shadow-lg"
           >
             <PlusIcon size={30} color={'white'} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleEdit}
-            className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-[50vw]"
+            className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-[50vw] shadow-lg"
           >
             <PencilIcon size={30} color={'white'} />
           </TouchableOpacity>

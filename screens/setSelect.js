@@ -11,12 +11,14 @@ import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFocusEffect } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import axios from 'axios';
-import { PlusIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
+import { EllipsisHorizontalIcon, XCircleIcon, PencilIcon, PlusIcon, XMarkIcon, ChevronLeftIcon } from 'react-native-heroicons/solid';
 
 export default function SetSelect(props) {
   const navigation = props.navigation;
   const { user_id, username, email, password, categoryId, categoryName, img, type } = props.route.params;
   const [wordSet, setWordSet] = useState([]);
+  const [isIconsVisible, setIsIconsVisible] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [fontsLoaded] = useFonts({
     Dangrek_400Regular,
   });
@@ -36,6 +38,29 @@ export default function SetSelect(props) {
     }, [])
   );
 
+  const handleDelete = async (id) => {
+    try {
+        await axios.post('https://exciting-monster-living.ngrok-free.app/setDelete', { id });
+        const updatedWordSet = wordSet.filter(card => card.id !== id);
+        setWordSet(updatedWordSet);
+    } catch (error) {
+      console.error('Error deleting word:', error);
+    }
+  };
+
+  const toggleIcons = () => {
+    setIsIconsVisible(!isIconsVisible);
+  };
+
+  const handleEdit = () => {
+    setEditMode(prevMode => !prevMode);
+    setIsIconsVisible(!isIconsVisible);
+  };
+
+  const handleCancelEdit = () => {
+    setEditMode(prevMode => !prevMode);
+  }
+
   if (!fontsLoaded) {
     return <Text>Font Loading...</Text>;
   }
@@ -48,6 +73,12 @@ export default function SetSelect(props) {
         <Text className="font-[dangrek] text-white pt-8 text-4xl">
           {categoryName}
         </Text>
+        {editMode && (
+          <TouchableOpacity onPress={handleCancelEdit} 
+            className="absolute right-0 pr-5 pt-2 shadow-sm">
+              <XMarkIcon size={50} color="#fff" />
+          </TouchableOpacity>
+        )}
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View className="flex-1 bg-[#CCE0FF] items-center pt-8">
@@ -84,16 +115,45 @@ export default function SetSelect(props) {
               className="bg-white w-[80vw] h-32 mb-5 justify-center items-center shadow-sm rounded-xl"
             >
               <Text className="font-[dangrek] text-4xl mt-4 p-10">{item.name}</Text>
+              {editMode && (
+                <TouchableOpacity onPress={() => handleDelete(item.id)} className="absolute right-0 mr-6">
+                    <XCircleIcon size={36} color={'red'}/>
+                </TouchableOpacity>
+              )}
             </TouchableOpacity>
           ))}
       </View>
       </ScrollView>
       {type === 'admin' && (
-        <TouchableOpacity 
-          onPress={() => navigation.navigate("AddSet", { user_id, username, email, password, categoryId, categoryName, img, type })}
-          className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-10">
-          <PlusIcon size={30} color={'white'}/>
-        </TouchableOpacity>
+        !isIconsVisible ? (
+          <TouchableOpacity
+            onPress={toggleIcons} // Toggle icons on EllipsisHorizontalIcon press
+            className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-10"
+          >
+            <EllipsisHorizontalIcon size={30} color={'white'} />
+          </TouchableOpacity>
+        ) : (
+          <>
+            <TouchableOpacity
+              onPress={toggleIcons} // Toggle icons on XMarkIcon press
+              className="absolute right-0 bottom-0 mr-7 p-5 bg-white rounded-full mb-10 shadow-lg"
+            >
+              <XMarkIcon size={30} color={'#397CE1'} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("AddSet", { user_id, username, email, password, categoryId, categoryName, img, type })}
+              className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-[30vw] shadow-lg"
+            >
+              <PlusIcon size={30} color={'white'} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleEdit}
+              className="absolute right-0 bottom-0 mr-7 p-5 bg-[#397CE1] rounded-full mb-[50vw] shadow-lg"
+            >
+              <PencilIcon size={30} color={'white'} />
+            </TouchableOpacity>
+          </>
+        )
       )}
     </SafeAreaView>
   );
