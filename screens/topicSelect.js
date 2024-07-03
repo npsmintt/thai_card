@@ -16,12 +16,13 @@ import { EllipsisHorizontalIcon, XCircleIcon, PencilIcon, PlusIcon, Cog6ToothIco
 
 export default function TopicSelect(props) {
   const navigation = props.navigation;
-  const { user_id, username: initialUsername, email, password, img: initialImg, type } = props.route.params;
+  const { user_id, username: initialUsername, email, password, img: initialImg, type: initialType } = props.route.params;
   const [categories, setCategories] = useState([]);
   const [fontsLoaded] = useFonts({
     Dangrek_400Regular,
   });
   const [img, setImg] = useState(initialImg);
+  const [type, setType] = useState(initialType)
   const [username, setUsername] = useState(initialUsername)
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isIconsVisible, setIsIconsVisible] = useState(false);
@@ -53,6 +54,7 @@ export default function TopicSelect(props) {
           const response = await axios.get(`https://exciting-monster-living.ngrok-free.app/getUser`, { params: { email } });
           setImg(response.data.img);
           setUsername(response.data.username);
+          setType(response.data.type);
         } catch (error) {
           console.log('email', email)
           console.error('Error fetching user data:', error);

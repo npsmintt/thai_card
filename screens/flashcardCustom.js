@@ -15,6 +15,7 @@ import { useFonts } from "expo-font";
 import axios from 'axios';
 import { ArrowPathIcon, ChevronLeftIcon, ChartBarIcon} from 'react-native-heroicons/solid';
 import { PanGestureHandler, GestureHandlerRootView, State } from 'react-native-gesture-handler';
+import * as Speech from 'expo-speech';
 
 export default function FlashcardCustom(props) {
   const navigation = props.navigation;
@@ -51,6 +52,17 @@ export default function FlashcardCustom(props) {
       useNativeDriver: true,
     }).start();
     setFlipped(!flipped);
+    
+    if (!flipped && card.thai_word) {
+      speakThai(card.thai_word);
+    }
+  };
+
+  const speakThai = (text) => {
+     Speech.speak(text, { 
+       language: 'th-TH',
+       voice: 'com.apple.ttsbundle.Kanya-premium',
+     });
   };
 
   const interpolateFront = flipAnimation.interpolate({
@@ -213,7 +225,7 @@ export default function FlashcardCustom(props) {
           </View>
           <View className="flex-row justify-between mb-12">
             <Text className="font-[dangrek] text-3xl w-30 pt-7 ml-9">{flashcards.length > 0 ? currentCard + 1 : 0}/{flashcards.length > 0 ? flashcards.length : initialFlashcards.length}</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Game', { user_id: user_id, username: username, email: email, categoryName: categoryName, wordSetId: wordSetId, wordSetName: wordSetName, img: img })} className="bg-[#397CE1] w-[180px] py-3 rounded-xl items-center ml-12">
+            <TouchableOpacity onPress={() => navigation.navigate('GameCustom', { user_id: user_id, username: username, email: email, userSetId: userSetId, userSetName: userSetName, img: img })} className="bg-[#397CE1] w-[180px] py-3 rounded-xl items-center ml-12">
               <Text className="font-[dangrek] text-white pt-4 text-3xl">Play!</Text>
             </TouchableOpacity>
           </View>

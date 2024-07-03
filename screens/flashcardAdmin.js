@@ -12,6 +12,7 @@ import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";
 import axios from 'axios';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
+import * as Speech from 'expo-speech';
 
 export default function FlashcardAdmin(props) {
   const navigation = props.navigation;
@@ -43,6 +44,17 @@ export default function FlashcardAdmin(props) {
       useNativeDriver: true,
     }).start();
     setFlipped(!flipped);
+    
+    if (!flipped && flashcard.thai_word) {
+      speakThai(flashcard.thai_word);
+    }
+  };
+
+  const speakThai = (text) => {
+     Speech.speak(text, { 
+       language: 'th-TH',
+       voice: 'com.apple.ttsbundle.Kanya-premium',
+     });
   };
 
   const interpolateFront = flipAnimation.interpolate({

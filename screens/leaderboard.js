@@ -89,7 +89,7 @@ export default function TopicSelect(props) {
           onPress={() => navigation.navigate('Game', { user_id: user_id, username: username, categoryName: categoryName, wordSetId: wordSetId, wordSetName: wordSetName, img: img })}
           className="bg-[#397CE1] rounded-lg w-36 h-20 justify-center items-center"
         >
-          <ArrowPathIcon size={40} stroke={50} color="#fff" />
+          <ArrowPathIcon size={40} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity 
           onPress={() => navigation.navigate('TopicSelect', { user_id: user_id, username: username, email: email })}

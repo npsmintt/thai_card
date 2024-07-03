@@ -9,13 +9,12 @@ import {
   Animated,
   Dimensions,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";
 import axios from 'axios';
 import { ArrowPathIcon, ChevronLeftIcon, ChartBarIcon} from 'react-native-heroicons/solid';
 import { PanGestureHandler, GestureHandlerRootView, State } from 'react-native-gesture-handler';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-dimensions';
+import * as Speech from 'expo-speech';
 
 export default function Flashcard(props) {
   const navigation = props.navigation;
@@ -52,6 +51,17 @@ export default function Flashcard(props) {
       useNativeDriver: true,
     }).start();
     setFlipped(!flipped);
+    
+    if (!flipped && card.thai_word) {
+      speakThai(card.thai_word);
+    }
+  };
+
+  const speakThai = (text) => {
+     Speech.speak(text, { 
+       language: 'th-TH',
+       voice: 'com.apple.ttsbundle.Kanya-premium',
+     });
   };
 
   const interpolateFront = flipAnimation.interpolate({
