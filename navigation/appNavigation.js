@@ -17,6 +17,10 @@ import FlashcardAdmin from '../screens/flashcardAdmin';
 import AddCategory from '../screens/addCategory';
 import AddSet from '../screens/addSet';
 import AddWord from '../screens/addWord';
+import TopicSelectCustom from '../screens/topicSelectCustom';
+import AddUserSet from '../screens/addUserSet';
+import FlashcardCustom from '../screens/flashcardCustom';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +47,9 @@ export default function AppNavigation() {
         <Stack.Screen name="AddCategory" options={{headerShown: false}} component={AddCategory} />
         <Stack.Screen name="AddSet" options={{headerShown: false}} component={AddSet} />
         <Stack.Screen name="AddWord" options={{headerShown: false}} component={AddWord} />
+        <Stack.Screen name="TopicSelectCustom" options={{headerShown: false}} component={TopicSelectCustom} />
+        <Stack.Screen name="AddUserSet" options={{headerShown: false}} component={AddUserSet} />
+        <Stack.Screen name="FlashcardCustom" options={{headerShown: false}} component={FlashcardCustom} />
       </Stack.Navigator>
     </NavigationContainer>
   )

@@ -285,11 +285,7 @@ app.post('/addCategory', (req, res) => {
   const sql = `INSERT INTO categories (name) VALUES (?)`;
 
   db.query(sql, [newCategoryName], (err, data) => {
-      if (err) {
-          console.error('Error adding category:', err);
-          return res.json({ status: "Failed" });
-      }
-      return res.json({ status: "Success" });
+    return res.json({ status: "Success" });
   });
 });
 
@@ -329,6 +325,43 @@ app.post('/addWord', (req, res) => {
   });
 });
 
+app.post('/addUserSet', (req, res) => {
+  const { user_id, newUserSetName } = req.body;
+  const sql = `INSERT INTO user_sets (user_id, name) VALUES (?, ?)`;
+  values = [user_id, newUserSetName]
+
+  db.query(sql, values, (err, data) => {
+      if (err) {
+          console.log('values', values)
+          console.error('Error adding category:', err);
+          return res.json({ status: "Failed" });
+      }
+      console.log('values', values)
+      return res.json({ status: "Success" });
+  });
+});
+
+app.get('/userSets', (req, res) => {
+  const { user_id } = req.query;
+  const sql = `SELECT * FROM user_sets WHERE user_id = ?`;
+  values = [user_id]
+
+  db.query(sql, values, (err, results) => {
+      if (err) {
+          console.error('Error adding category:', err);
+          return res.json({ status: "Failed" });
+      }
+      return res.send(results);
+  });
+});
+
+app.get('/userFlashcards/:userSetId', (req, res) => { 
+  const userSetId = req.params.userSetId;
+  db.query('SELECT * FROM user_flashcards WHERE user_sets_id = ?', [userSetId], (error, results) => {
+      if (error) throw error;
+      res.send(results);
+  });
+});
 
 app.listen(3000, ()=> {
   console.log("listening at port 3000")
