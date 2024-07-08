@@ -186,7 +186,7 @@ export default function AddWordCustom(props) {
             />
         </View>
         {errors.pronunciation && <Text style={styles.text}>{errors.pronunciation}</Text>}
-        <Text className="font-[dangrek] text-3xl items-center justify-center pt-4">Image</Text>
+        {/* <Text className="font-[dangrek] text-3xl items-center justify-center pt-4">Image</Text>
         <View className="bg-white w-80 py-3 mb-3 rounded-xl justify-center">
           <TextInput
             name="imgUrl"
@@ -203,7 +203,7 @@ export default function AddWordCustom(props) {
           <TouchableOpacity className="absolute bg-[#397CE1] w-20 py-2 mb-3 right-0 mr-3 rounded-xl justify-center items-center">
             <ArrowUpTrayIcon size={30} color={'#fff'} className="items-center justify-center"/>
           </TouchableOpacity>
-        </View>
+        </View> */}
         {errors.limit && <Text style={styles.text}>{errors.limit}</Text>}
         <View className="justify-between mb-12">
           <TouchableOpacity onPress={handleAddWord} className="bg-[#3EC928] w-80 py-3 mt-5 rounded-xl items-center">
