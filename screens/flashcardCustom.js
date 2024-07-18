@@ -161,7 +161,7 @@ export default function FlashcardCustom(props) {
           </TouchableOpacity> */}
         </View>
         <View className="flex-0 bg-[#CCE0FF] items-center pt-10">
-          <View className="w-80 h-[132vw] relative mb-10">
+          <View className="w-80 h-[75%] relative mb-10">
             {flashcards.length > 0 ? (
               card && (
                 <TouchableOpacity onPress={handleFlip} style={styles.card}>
@@ -205,7 +205,7 @@ export default function FlashcardCustom(props) {
                           styles.card,
                           !flipped ? styles.hidden : null
                         ]}>
-                        <View className="bg-white w-80 h-[132vw] mb-10 justify-center items-center shadow-sm rounded-xl">
+                        <View className="bg-white w-80 h-[100%] mb-10 justify-center items-center shadow-sm rounded-xl">
                           <Text className="text-5xl pt-3 mb-5">{card.thai_word}</Text>
                           <Text className="text-5xl">{card.pronunciation}</Text>
                         </View>

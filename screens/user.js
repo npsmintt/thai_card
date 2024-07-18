@@ -13,7 +13,7 @@ import { Dangrek_400Regular } from "@expo-google-fonts/dangrek";
 import { useFonts } from "expo-font";
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
-import validation from "../validations/addCategoryValidation";
+import validation from "../validations/updateValidation";
 import { ChevronLeftIcon, PencilSquareIcon } from 'react-native-heroicons/solid';
 
 export default function User(props) {
@@ -62,7 +62,7 @@ export default function User(props) {
   };
 
   const handleUpdate = async () => {
-    const err = validation({ username, password });
+    const err = validation({ username: username, password: password });
   
     if (editMode.password) {
       setErrors(err);

@@ -96,7 +96,7 @@ describe('AddWordCustom', () => {
     const { getByText, getByPlaceholderText } = render(<AddWordCustom {...mockProps} />);
 
     // Simulate user input
-    fireEvent.changeText(getByPlaceholderText('English Word'), 'Hello');
+    fireEvent.changeText(getByPlaceholderText('English Word'), 'hi');
     fireEvent.changeText(getByPlaceholderText('Thai Word'), 'สวัสดี');
     fireEvent.changeText(getByPlaceholderText('Pronunciation'), 'sa-wat-dee');
 
@@ -108,7 +108,7 @@ describe('AddWordCustom', () => {
       expect(axios.post).toHaveBeenCalledWith('https://exciting-monster-living.ngrok-free.app/addWordCustom', {
         values: {
           userSetId: 1,
-          english_word: 'Hello',
+          english_word: 'hi',
           thai_word: 'สวัสดี',
           pronunciation: 'sa-wat-dee',
           image_url: ''
