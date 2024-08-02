@@ -95,6 +95,7 @@ export default function TopicSelect(props) {
   }
 
   const handlePress = () => {
+    console.log('id', user_id, 'username', username, 'email', email, 'pw', password, 'img', img, 'type', type);
     navigation.navigate('TopicSelectCustom', {
       user_id: user_id,
       username: username,
@@ -103,7 +104,7 @@ export default function TopicSelect(props) {
       img: img,
       type: type
     });
-  
+
     toggleMenu();
   };
 

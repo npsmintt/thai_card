@@ -142,6 +142,7 @@ app.put('/updatePic', async (req, res) => {
 
 app.get('/getUser', async (req, res) => {
   const email = req.query.email;
+  console.log(email);
   if (!email) {
     return res.status(400).json({ error: 'Email parameter is required' });
   }

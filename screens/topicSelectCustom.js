@@ -45,7 +45,8 @@ export default function TopicSelectCustom(props) {
           setImg(response.data.img);
           setUsername(response.data.username);
         } catch (error) {
-          console.error('Error fetching user data:', error);
+          console.log('email', email)
+          console.error('email', email, 'Error fetching user data:', error);
         }
       };
   
@@ -60,7 +61,7 @@ export default function TopicSelectCustom(props) {
   
       fetchUserData();
       fetchUserSet();
-    }, [email, user_id])
+    }, [])
   );
 
   const handleDelete = async (id) => {

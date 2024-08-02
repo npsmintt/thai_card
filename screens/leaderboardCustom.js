@@ -84,7 +84,7 @@ export default function LeaderboardCustom(props) {
         </View>
         <View className="flex-row space-x-5 justify-center items-center mb-5">
         <TouchableOpacity 
-          onPress={() => navigation.navigate('GameCustom', { user_id: user_id, username: username, userSetId: userSetId, userSetName: userSetName, img: img })}
+          onPress={() => navigation.navigate('GameCustom', { user_id: user_id, username: username, email: email, userSetId: userSetId, userSetName: userSetName, img: img })}
           className="bg-[#397CE1] rounded-lg w-36 h-20 justify-center items-center"
         >
           <ArrowPathIcon size={40} color="#fff" />
