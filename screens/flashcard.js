@@ -77,16 +77,34 @@ export default function Flashcard(props) {
     const translationX = event.nativeEvent.translationX;
     const threshold = 100; // Adjust the threshold as needed
 
+    // if (translationX < -threshold) {
+    //   // Swiped left
+    //   setCurrentCard((prevCard) => (prevCard + 1) % flashcards.length);
+    //   setFlipped(false);
+    //   flipAnimation.setValue(0);
+    // } else if (translationX > threshold) {
+    //   // Swiped right
+    //   setFlashcards((prevFlashcards) => {
+    //     const updatedFlashcards = prevFlashcards.slice(1);
+    //     setCurrentCard(0); // Reset to first card or adjust accordingly
+    //     return updatedFlashcards;
+    //   });
+    //   setFlipped(false);
+    //   flipAnimation.setValue(0);
     if (translationX < -threshold) {
       // Swiped left
-      setCurrentCard((prevCard) => (prevCard + 1) % flashcards.length);
+      setFlashcards((prevFlashcards) => {
+        const updatedFlashcards = [...prevFlashcards];
+        const currentCardItem = updatedFlashcards.splice(currentCard, 1)[0];
+        updatedFlashcards.push(currentCardItem);
+        return updatedFlashcards;
+      });
       setFlipped(false);
       flipAnimation.setValue(0);
     } else if (translationX > threshold) {
       // Swiped right
       setFlashcards((prevFlashcards) => {
-        const updatedFlashcards = prevFlashcards.slice(1);
-        setCurrentCard(0); // Reset to first card or adjust accordingly
+        const updatedFlashcards = prevFlashcards.filter((_, index) => index !== currentCard);
         return updatedFlashcards;
       });
       setFlipped(false);
@@ -164,7 +182,7 @@ export default function Flashcard(props) {
           </Text>
         </View>
         <View className="flex-0 bg-[#CCE0FF] items-center pt-10">
-          <View className="w-80 h-[132vw] relative mb-10">
+          <View className="w-80 h-[75%] relative mb-10">
             {flashcards.length > 0 ? (
               card && (
                 <TouchableOpacity onPress={handleFlip} style={styles.card}>
@@ -208,7 +226,7 @@ export default function Flashcard(props) {
                           styles.card,
                           !flipped ? styles.hidden : null
                         ]}>
-                        <View className="bg-white w-80 h-[132vw] mb-10 justify-center items-center shadow-sm rounded-xl">
+                        <View className="bg-white w-80 h-[100%] mb-10 justify-center items-center shadow-sm rounded-xl">
                           <Text className="text-5xl pt-3 mb-5">{card.thai_word}</Text>
                           <Text className="text-5xl">{card.pronunciation}</Text>
                         </View>

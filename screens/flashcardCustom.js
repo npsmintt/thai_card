@@ -81,14 +81,18 @@ export default function FlashcardCustom(props) {
 
     if (translationX < -threshold) {
       // Swiped left
-      setCurrentCard((prevCard) => (prevCard + 1) % flashcards.length);
+      setFlashcards((prevFlashcards) => {
+        const updatedFlashcards = [...prevFlashcards];
+        const currentCardItem = updatedFlashcards.splice(currentCard, 1)[0];
+        updatedFlashcards.push(currentCardItem);
+        return updatedFlashcards;
+      });
       setFlipped(false);
       flipAnimation.setValue(0);
     } else if (translationX > threshold) {
       // Swiped right
       setFlashcards((prevFlashcards) => {
-        const updatedFlashcards = prevFlashcards.slice(1);
-        setCurrentCard(0); // Reset to first card or adjust accordingly
+        const updatedFlashcards = prevFlashcards.filter((_, index) => index !== currentCard);
         return updatedFlashcards;
       });
       setFlipped(false);
